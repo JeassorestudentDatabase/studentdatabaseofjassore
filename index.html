@@ -1,10 +1,11 @@
-
+Here is an HTML document that implements a student database with photo uploads and session-wise sub-pages.
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Jessore Association — Student Database</title>
+<title>Jashore Association — Kapotaksha DB with Photos & Sessions</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -22,7 +23,6 @@
     --radius: 12px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--white);
@@ -30,11 +30,10 @@
     min-height: 100vh;
   }
 
-  /* ── HEADER ── */
+  /* Header */
   header {
     background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
     color: #fff;
-    padding: 0;
     position: sticky; top: 0; z-index: 100;
     box-shadow: 0 2px 16px rgba(0,0,0,0.18);
   }
@@ -43,6 +42,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 28px;
     gap: 16px;
+    flex-wrap: wrap;
   }
   .logo-area { display: flex; align-items: center; gap: 14px; }
   .logo-circle {
@@ -51,368 +51,184 @@
     display: flex; align-items: center; justify-content: center;
     font-family: 'Playfair Display', serif;
     font-size: 22px; font-weight: 900; color: var(--green-dark);
-    box-shadow: 0 2px 8px rgba(201,168,76,0.4);
-    flex-shrink: 0;
   }
-  .org-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.35rem; font-weight: 700; line-height: 1.2;
-  }
-  .org-sub { font-size: 0.78rem; color: rgba(255,255,255,0.75); letter-spacing: 0.08em; margin-top: 2px; }
+  .org-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; }
+  .org-sub { font-size: 0.7rem; color: rgba(255,255,255,0.8); }
   .header-stats { display: flex; gap: 20px; }
-  .stat-pill {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 999px;
-    padding: 6px 16px;
-    text-align: center;
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.9);
-  }
+  .stat-pill { background: rgba(255,255,255,0.12); border-radius: 999px; padding: 6px 16px; font-size: 0.78rem; }
   .stat-pill strong { display: block; font-size: 1.1rem; color: var(--gold); }
 
-  /* ── TOOLBAR ── */
+  /* Navigation Tabs */
+  .nav-tabs {
+    max-width: 1200px; margin: 16px auto 0; padding: 0 28px;
+    display: flex; gap: 12px; border-bottom: 2px solid var(--border);
+  }
+  .tab-btn {
+    background: none; border: none; padding: 12px 24px;
+    font-size: 1rem; font-weight: 600; font-family: inherit;
+    cursor: pointer; color: var(--muted); border-radius: var(--radius) var(--radius) 0 0;
+    transition: all .2s;
+  }
+  .tab-btn.active { color: var(--green); background: var(--green-light); border-bottom: 3px solid var(--green); }
+  .tab-btn:hover:not(.active) { background: #f0f0f0; color: var(--green-dark); }
+
+  /* Toolbar */
   .toolbar {
-    max-width: 1200px; margin: 28px auto 0; padding: 0 28px;
+    max-width: 1200px; margin: 20px auto 0; padding: 0 28px;
     display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
   }
-  .search-wrap {
-    flex: 1; min-width: 220px; position: relative;
-  }
+  .search-wrap { flex: 1; min-width: 200px; position: relative; }
   .search-wrap input {
-    width: 100%;
-    padding: 11px 16px 11px 44px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 0.92rem;
-    font-family: inherit;
-    background: #fff;
-    outline: none;
-    transition: border-color .2s;
+    width: 100%; padding: 11px 16px 11px 44px;
+    border: 2px solid var(--border); border-radius: var(--radius);
+    font-family: inherit; outline: none;
   }
   .search-wrap input:focus { border-color: var(--green); }
-  .search-icon {
-    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-    color: var(--muted); font-size: 1rem; pointer-events: none;
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  select.filter-sel, .btn {
+    padding: 11px 16px; border-radius: var(--radius);
+    border: 2px solid var(--border); background: white;
+    font-family: inherit; cursor: pointer;
   }
-  select.filter-sel {
-    padding: 11px 14px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    font-family: inherit; font-size: 0.92rem;
-    background: #fff; outline: none; cursor: pointer;
-    transition: border-color .2s;
-  }
-  select.filter-sel:focus { border-color: var(--green); }
-  .btn {
-    padding: 11px 20px; border-radius: var(--radius);
-    border: none; cursor: pointer;
-    font-family: inherit; font-size: 0.92rem; font-weight: 600;
-    transition: all .18s; display: flex; align-items: center; gap: 7px;
-  }
-  .btn-primary { background: var(--green); color: #fff; }
-  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
-  .btn-gold { background: var(--gold); color: var(--green-dark); }
-  .btn-gold:hover { background: #b8943e; transform: translateY(-1px); }
-  .btn-outline { background: #fff; color: var(--green); border: 2px solid var(--green); }
-  .btn-outline:hover { background: var(--green-light); }
+  .btn-primary { background: var(--green); color: white; border: none; }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-gold { background: var(--gold); color: var(--green-dark); border: none; }
+  .btn-outline { background: white; border: 2px solid var(--green); color: var(--green); }
 
-  /* ── MAIN TABLE AREA ── */
+  /* Cards & Grid */
   .main { max-width: 1200px; margin: 20px auto 60px; padding: 0 28px; }
-  .table-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
+  .session-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-top: 20px; }
+  .session-card {
+    background: white; border-radius: 20px; border: 1px solid var(--border);
+    overflow: hidden; transition: all 0.2s; box-shadow: var(--shadow);
+    cursor: pointer;
   }
-  .table-header {
-    background: var(--green-light);
-    padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.85rem; color: var(--green-dark); font-weight: 600;
-  }
+  .session-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
+  .session-cover { background: var(--green); padding: 24px; text-align: center; color: white; }
+  .session-cover h3 { font-size: 1.8rem; font-family: 'Playfair Display'; }
+  .session-info { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .student-thumbnails { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .thumb-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--green-light); border: 2px solid var(--gold); }
+  .table-card { background: #fff; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+  .table-header { background: var(--green-light); padding: 12px 20px; display: flex; justify-content: space-between; }
   .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-  thead tr { background: var(--green); color: #fff; }
-  thead th {
-    padding: 12px 14px; text-align: left; font-weight: 600;
-    letter-spacing: 0.03em; white-space: nowrap;
-  }
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background .15s;
-  }
-  tbody tr:hover { background: var(--green-light); }
-  tbody td { padding: 11px 14px; vertical-align: middle; }
-  .blood-badge {
-    display: inline-block; padding: 2px 9px; border-radius: 999px;
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em;
-    background: #fee2e2; color: #991b1b;
-  }
-  .dept-badge {
-    display: inline-block; padding: 2px 9px; border-radius: 6px;
-    font-size: 0.78rem; font-weight: 600;
-    background: var(--gold-light); color: #7a5c0a;
-  }
-  .action-btn {
-    padding: 5px 11px; border-radius: 7px; border: none;
-    cursor: pointer; font-size: 0.8rem; font-weight: 600;
-    font-family: inherit; transition: all .15s; margin-right: 4px;
-  }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--green); color: white; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  .student-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #ddd; margin-right: 8px; vertical-align: middle; }
+  .action-btn { padding: 5px 10px; border-radius: 8px; border: none; cursor: pointer; margin-right: 4px; font-weight: 600; }
   .edit-btn { background: #dbeafe; color: #1d4ed8; }
-  .edit-btn:hover { background: #bfdbfe; }
   .del-btn { background: #fee2e2; color: #b91c1c; }
-  .del-btn:hover { background: #fecaca; }
-  .empty-state {
-    text-align: center; padding: 60px 20px; color: var(--muted);
-  }
-  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
-  .empty-state p { font-size: 1rem; }
+  .back-btn { margin-bottom: 16px; }
 
-  /* ── MODAL ── */
-  .overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45); z-index: 200;
-    align-items: center; justify-content: center;
-    animation: fadeIn .2s;
-  }
+  /* Modal */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
   .overlay.active { display: flex; }
-  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
-  .modal {
-    background: #fff; border-radius: 20px;
-    width: min(680px, 96vw); max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    animation: slideUp .22s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(30px); opacity:0 } to { transform: translateY(0); opacity:1 } }
-  .modal-header {
-    background: linear-gradient(135deg, var(--green-dark), var(--green));
-    color: #fff; padding: 22px 28px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-radius: 20px 20px 0 0;
-  }
-  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
-  .close-btn {
-    background: rgba(255,255,255,0.2); border: none; color: #fff;
-    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-    transition: background .15s;
-  }
-  .close-btn:hover { background: rgba(255,255,255,0.35); }
-  .modal-body { padding: 28px; }
-  .form-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  }
+  .modal { background: white; border-radius: 24px; width: min(750px, 96vw); max-height: 90vh; overflow-y: auto; }
+  .modal-header { background: linear-gradient(135deg, var(--green-dark), var(--green)); color: white; padding: 18px 24px; display: flex; justify-content: space-between; border-radius: 24px 24px 0 0; }
+  .modal-body { padding: 24px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.full { grid-column: 1 / -1; }
-  label { font-size: 0.82rem; font-weight: 600; color: var(--green-dark); letter-spacing: 0.03em; }
-  .form-group input, .form-group select {
-    padding: 10px 13px;
-    border: 2px solid var(--border); border-radius: 9px;
-    font-family: inherit; font-size: 0.9rem; outline: none;
-    transition: border-color .18s; background: #fff;
-  }
-  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
-  .modal-footer {
-    padding: 18px 28px; border-top: 1px solid var(--border);
-    display: flex; justify-content: flex-end; gap: 10px;
-  }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 28px; right: 28px; z-index: 300;
-    background: var(--green-dark); color: #fff;
-    padding: 13px 22px; border-radius: 12px;
-    font-size: 0.9rem; font-weight: 500;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
-    transform: translateY(80px); opacity: 0;
-    transition: all .3s cubic-bezier(.34,1.56,.64,1);
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .header-stats { display: none; }
-    .form-grid { grid-template-columns: 1fr; }
-    .toolbar { gap: 8px; }
-  }
+  .form-group.full { grid-column: 1/-1; }
+  input, select { padding: 10px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; }
+  .photo-preview { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+  .preview-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: #e2e8f0; border: 2px solid var(--gold); }
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--green-dark); color: white; padding: 12px 22px; border-radius: 40px; opacity: 0; transition: 0.2s; z-index: 300; }
+  .toast.show { opacity: 1; }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
-    <div class="logo-area">
-      <div class="logo-circle">JA</div>
-      <div>
-        <div class="org-name">Jessore Association</div>
-        <div class="org-sub">STUDENT INFORMATION DATABASE</div>
-      </div>
-    </div>
-    <div class="header-stats">
-      <div class="stat-pill"><strong id="totalCount">0</strong>Total</div>
-      <div class="stat-pill"><strong id="deptCount">0</strong>Departments</div>
-    </div>
+    <div class="logo-area"><div class="logo-circle">JA</div><div><div class="org-name">Jashore District Students Association (Kapotaksha)</div><div class="org-sub">PHOTO + SESSION WISE DATABASE</div></div></div>
+    <div class="header-stats"><div class="stat-pill"><strong id="totalCount">0</strong>Total</div><div class="stat-pill"><strong id="sessionCount">0</strong>Sessions</div></div>
   </div>
 </header>
 
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Search by name, phone, email, department…" oninput="renderTable()"/>
-  </div>
-  <select class="filter-sel" id="deptFilter" onchange="renderTable()">
-    <option value="">All Departments</option>
-  </select>
-  <select class="filter-sel" id="yearFilter" onchange="renderTable()">
-    <option value="">All Years</option>
-    <option>1st Year</option>
-    <option>2nd Year</option>
-    <option>3rd Year</option>
-    <option>4th Year</option>
-  </select>
-  <select class="filter-sel" id="bloodFilter" onchange="renderTable()">
-    <option value="">All Blood Groups</option>
-    <option>A+</option><option>A-</option>
-    <option>B+</option><option>B-</option>
-    <option>O+</option><option>O-</option>
-    <option>AB+</option><option>AB-</option>
-  </select>
+<div class="nav-tabs">
+  <button class="tab-btn active" data-tab="main">📋 All Students</button>
+  <button class="tab-btn" data-tab="session">📁 Session-wise View</button>
+</div>
+
+<!-- Toolbar (visible in main tab) -->
+<div class="toolbar" id="mainToolbar">
+  <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="Search name / phone / dept..." oninput="renderMainTable()"/></div>
+  <select class="filter-sel" id="deptFilter" onchange="renderMainTable()"><option value="">All Departments</option></select>
+  <select class="filter-sel" id="yearFilter" onchange="renderMainTable()"><option value="">All Years</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
+  <select class="filter-sel" id="bloodFilter" onchange="renderMainTable()"><option value="">All Blood</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
   <button class="btn btn-primary" onclick="openModal()">＋ Add Student</button>
   <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
 </div>
 
-<!-- MAIN TABLE -->
-<div class="main">
+<!-- MAIN CONTENT: Two Views -->
+<div class="main" id="mainView">
   <div class="table-card">
-    <div class="table-header">
-      <span id="resultCount">Showing all students</span>
-      <span style="color:var(--muted); font-weight:400">Data saved in your browser</span>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Father's Name</th>
-            <th>Mother's Name</th>
-            <th>Blood</th>
-            <th>Department</th>
-            <th>Year</th>
-            <th>Session</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
+    <div class="table-header"><span id="resultCount">Showing all students</span><span>📸 Photo supported</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Father</th><th>Mother</th><th>Blood</th><th>Dept</th><th>Year</th><th>Session</th><th>Actions</th></tr></thead><tbody id="tableBody"></tbody></table></div>
   </div>
 </div>
 
-<!-- ADD/EDIT MODAL -->
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Add New Student</h2>
-      <button class="close-btn" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>FULL NAME *</label>
-          <input id="f_name" type="text" placeholder="e.g. Md. Rakibul Islam"/>
-        </div>
-        <div class="form-group">
-          <label>PHONE NUMBER *</label>
-          <input id="f_phone" type="tel" placeholder="01XXXXXXXXX"/>
-        </div>
-        <div class="form-group">
-          <label>EMAIL ADDRESS</label>
-          <input id="f_email" type="email" placeholder="student@example.com"/>
-        </div>
-        <div class="form-group full">
-          <label>ADDRESS</label>
-          <input id="f_address" type="text" placeholder="Village, Upazila, District"/>
-        </div>
-        <div class="form-group">
-          <label>FATHER'S NAME</label>
-          <input id="f_father" type="text" placeholder="Father's full name"/>
-        </div>
-        <div class="form-group">
-          <label>MOTHER'S NAME</label>
-          <input id="f_mother" type="text" placeholder="Mother's full name"/>
-        </div>
-        <div class="form-group">
-          <label>BLOOD GROUP</label>
-          <select id="f_blood">
-            <option value="">— Select —</option>
-            <option>A+</option><option>A-</option>
-            <option>B+</option><option>B-</option>
-            <option>O+</option><option>O-</option>
-            <option>AB+</option><option>AB-</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>DEPARTMENT *</label>
-          <input id="f_dept" type="text" placeholder="e.g. CSE, EEE, BBA…"/>
-        </div>
-        <div class="form-group">
-          <label>YEAR</label>
-          <select id="f_year">
-            <option value="">— Select —</option>
-            <option>1st Year</option>
-            <option>2nd Year</option>
-            <option>3rd Year</option>
-            <option>4th Year</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>SESSION</label>
-          <input id="f_session" type="text" placeholder="e.g. 2022-23"/>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveStudent()">💾 Save Student</button>
-    </div>
-  </div>
+<div class="main" id="sessionView" style="display:none;">
+  <div class="session-grid" id="sessionGrid"></div>
 </div>
 
-<!-- TOAST -->
+<!-- Modal Add/Edit with Photo -->
+<div class="overlay" id="overlay"><div class="modal"><div class="modal-header"><h2 id="modalTitle">Add Student</h2><button class="close-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="form-grid">
+  <div class="form-group full"><label>📸 PROFILE PHOTO</label><input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)"/><div class="photo-preview"><img id="photoPreview" class="preview-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23cbd5e1'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="preview"/><span style="font-size:12px; color:gray;">Click to upload (PNG/JPG)</span></div></div>
+  <div class="form-group full"><label>FULL NAME *</label><input id="f_name" placeholder="e.g. Md. Rakibul Islam"/></div>
+  <div class="form-group"><label>PHONE *</label><input id="f_phone" placeholder="01XXXXXXXXX"/></div>
+  <div class="form-group"><label>EMAIL</label><input id="f_email" placeholder="student@example.com"/></div>
+  <div class="form-group full"><label>ADDRESS</label><input id="f_address" placeholder="Village, Upazila, District"/></div>
+  <div class="form-group"><label>FATHER'S NAME</label><input id="f_father"/></div><div class="form-group"><label>MOTHER'S NAME</label><input id="f_mother"/></div>
+  <div class="form-group"><label>BLOOD GROUP</label><select id="f_blood"><option value="">—Select—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
+  <div class="form-group"><label>DEPARTMENT *</label><input id="f_dept" placeholder="CSE, BBA, EEE..."/></div>
+  <div class="form-group"><label>YEAR</label><select id="f_year"><option value="">—Select—</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+  <div class="form-group"><label>SESSION (e.g. 2022-23) *</label><input id="f_session" placeholder="2022-23" /></div>
+</div></div><div class="modal-footer" style="padding:18px 24px; display:flex; gap:12px; justify-content:flex-end;"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">💾 Save Student</button></div></div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-  const STORAGE_KEY = 'jessore_students';
+  const STORAGE_KEY = 'jashore_kapotaksha_photo_db';
   let students = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   let editId = null;
+  let currentPhotoBase64 = null;
 
-  /* ── HELPERS ── */
-  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); }
+  // Helper functions
+  function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); updateStats(); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function toast(msg, color='var(--green-dark)') {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.style.background = color;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function toast(msg, color='var(--green-dark)') { const t = document.getElementById('toast'); t.textContent = msg; t.style.background = color; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+  // Photo handling
+  function previewPhoto(event) {
+    const file = event.target.files[0];
+    if(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) { currentPhotoBase64 = e.target.result; document.getElementById('photoPreview').src = currentPhotoBase64; };
+      reader.readAsDataURL(file);
+    } else { currentPhotoBase64 = null; document.getElementById('photoPreview').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23cbd5e1'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"; }
   }
 
-  /* ── RENDER TABLE ── */
-  function renderTable() {
-    const q   = document.getElementById('searchInput').value.toLowerCase();
-    const dept = document.getElementById('deptFilter').value;
-    const year = document.getElementById('yearFilter').value;
-    const blood = document.getElementById('bloodFilter').value;
+  // Stats & update session dropdowns
+  function updateStats() {
+    document.getElementById('totalCount').textContent = students.length;
+    const uniqueSessions = new Set(students.map(s=>s.session).filter(Boolean));
+    document.getElementById('sessionCount').textContent = uniqueSessions.size;
+    // Update department filter
+    const depts = [...new Set(students.map(s=>s.dept).filter(Boolean))];
+    const df = document.getElementById('deptFilter');
+    if(df) { let cur = df.value; df.innerHTML = '<option value="">All Departments</option>' + depts.sort().map(d=>`<option${d===cur?' selected':''}>${esc(d)}</option>`).join(''); }
+  }
 
+  // RENDER MAIN TABLE (with photo)
+  function renderMainTable() {
+    const q = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const dept = document.getElementById('deptFilter')?.value || '';
+    const year = document.getElementById('yearFilter')?.value || '';
+    const blood = document.getElementById('bloodFilter')?.value || '';
     let filtered = students.filter(s => {
       const matchQ = !q || [s.name,s.phone,s.email,s.dept,s.session,s.address].join(' ').toLowerCase().includes(q);
       const matchD = !dept || s.dept === dept;
@@ -420,127 +236,91 @@
       const matchB = !blood || s.blood === blood;
       return matchQ && matchD && matchY && matchB;
     });
-
+    document.getElementById('resultCount').innerText = filtered.length === students.length ? `Showing all ${students.length} students` : `Showing ${filtered.length} of ${students.length}`;
     const tbody = document.getElementById('tableBody');
-    document.getElementById('resultCount').textContent =
-      filtered.length === students.length
-        ? `Showing all ${students.length} student${students.length!==1?'s':''}`
-        : `Showing ${filtered.length} of ${students.length} students`;
-
-    if (!filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="12">
-        <div class="empty-state">
-          <div class="icon">🎓</div>
-          <p>${students.length ? 'No students match your filters.' : 'No students yet. Click <strong>+ Add Student</strong> to get started.'}</p>
-        </div></td></tr>`;
-      updateStats(); return;
-    }
-
-    tbody.innerHTML = filtered.map((s, i) => `
+    if(!filtered.length) { tbody.innerHTML = `<tr><td colspan="12"><div style="padding:48px; text-align:center;">🎓 No students found</div></td></tr>`; return; }
+    tbody.innerHTML = filtered.map(s => `
       <tr>
-        <td style="color:var(--muted);font-size:.8rem">${i+1}</td>
+        <td><img class="student-avatar" src="${s.photo || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'" /></td>
         <td><strong>${esc(s.name)}</strong></td>
-        <td>${esc(s.phone)}</td>
-        <td style="font-size:.82rem;color:var(--muted)">${esc(s.email)}</td>
-        <td style="font-size:.82rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.address)}">${esc(s.address)}</td>
-        <td>${esc(s.father)}</td>
-        <td>${esc(s.mother)}</td>
-        <td>${s.blood ? `<span class="blood-badge">${esc(s.blood)}</span>` : '—'}</td>
-        <td>${s.dept ? `<span class="dept-badge">${esc(s.dept)}</span>` : '—'}</td>
-        <td>${esc(s.year)||'—'}</td>
-        <td>${esc(s.session)||'—'}</td>
-        <td style="white-space:nowrap">
-          <button class="action-btn edit-btn" onclick="openEdit('${s.id}')">✏️ Edit</button>
-          <button class="action-btn del-btn" onclick="deleteStudent('${s.id}')">🗑 Del</button>
-        </td>
-      </tr>`).join('');
+        <td>${esc(s.phone)}</td><td>${esc(s.email)}</td><td>${esc(s.address)}</td>
+        <td>${esc(s.father)}</td><td>${esc(s.mother)}</td>
+        <td>${s.blood ? `<span class="blood-badge" style="background:#fee2e2;padding:2px 8px;border-radius:40px;">${esc(s.blood)}</span>` : '—'}</td>
+        <td><span style="background:var(--gold-light);padding:2px 8px;border-radius:20px;">${esc(s.dept)}</span></td>
+        <td>${esc(s.year)||'—'}</td><td><strong>${esc(s.session)||'—'}</strong></td>
+        <td><button class="action-btn edit-btn" onclick="openEdit('${s.id}')">✏️ Edit</button><button class="action-btn del-btn" onclick="deleteStudent('${s.id}')">🗑 Del</button></td>
+      </tr>
+    `).join('');
     updateStats();
   }
 
-  function updateStats() {
-    document.getElementById('totalCount').textContent = students.length;
-    const depts = new Set(students.map(s=>s.dept).filter(Boolean));
-    document.getElementById('deptCount').textContent = depts.size;
-    // update dept filter
-    const df = document.getElementById('deptFilter');
-    const cur = df.value;
-    df.innerHTML = '<option value="">All Departments</option>' +
-      [...depts].sort().map(d=>`<option${d===cur?' selected':''}>${d}</option>`).join('');
+  // SESSION VIEW – subpages by session
+  let currentSessionView = null; // for back button state
+  function renderSessionView() {
+    const sessionsMap = new Map();
+    students.forEach(s => { if(s.session) { if(!sessionsMap.has(s.session)) sessionsMap.set(s.session, []); sessionsMap.get(s.session).push(s); } });
+    if(sessionsMap.size === 0) { document.getElementById('sessionGrid').innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px;">📭 No sessions yet. Add students with session (e.g., 2022-23) to see session-wise data.</div>`; return; }
+    const grid = document.getElementById('sessionGrid');
+    grid.innerHTML = Array.from(sessionsMap.keys()).sort().map(session => {
+      const studentList = sessionsMap.get(session);
+      const previewPhotos = studentList.slice(0,4).map(st => `<img class="thumb-img" src="${st.photo || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'%23a0aec0\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'%23a0aec0\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'" />`).join('');
+      return `<div class="session-card" onclick="openSessionDetail('${session.replace(/'/g, "\\'")}')">
+        <div class="session-cover"><h3>📘 ${esc(session)}</h3><div style="font-size:14px;">${studentList.length} Students</div></div>
+        <div class="session-info"><div><strong>🎓 Session ${esc(session)}</strong><div class="student-thumbnails">${previewPhotos}</div></div><span style="color:var(--green);">➡️ View</span></div>
+      </div>`;
+    }).join('');
   }
 
-  /* ── MODAL ── */
-  function openModal(id=null) {
-    editId = id;
-    const s = id ? students.find(x=>x.id===id) : null;
-    document.getElementById('modalTitle').textContent = id ? 'Edit Student' : 'Add New Student';
-    ['name','phone','email','address','father','mother','blood','dept','year','session'].forEach(k=>{
-      document.getElementById('f_'+k).value = s ? s[k]||'' : '';
-    });
-    document.getElementById('overlay').classList.add('active');
+  // Open session subpage: shows a detailed table for that specific session
+  function openSessionDetail(sessionName) {
+    currentSessionView = sessionName;
+    const sessionStudents = students.filter(s => s.session === sessionName);
+    const container = document.getElementById('sessionGrid');
+    container.innerHTML = `
+      <div style="grid-column:1/-1; margin-bottom:16px;"><button class="btn btn-outline" onclick="backToSessionGrid()">← Back to All Sessions</button> <span style="font-weight:bold; margin-left:16px;">📌 Session: ${esc(sessionName)} (${sessionStudents.length} students)</span></div>
+      <div style="grid-column:1/-1; background:white; border-radius:20px; overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse;"><thead><tr style="background:var(--green); color:white;"><th>Photo</th><th>Name</th><th>Phone</th><th>Department</th><th>Year</th><th>Blood</th><th>Actions</th></tr></thead><tbody>
+          ${sessionStudents.map(s => `
+            <tr><td><img class="student-avatar" src="${s.photo || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'" /></td>
+            <td><strong>${esc(s.name)}</strong></td><td>${esc(s.phone)}</td><td>${esc(s.dept)}</td><td>${esc(s.year)}</td><td>${s.blood||'—'}</td>
+            <td><button class="action-btn edit-btn" onclick="openEdit('${s.id}')">Edit</button><button class="action-btn del-btn" onclick="deleteStudent('${s.id}')">Del</button></td></tr>
+          `).join('')}
+        </tbody></table>
+      </div>
+    `;
   }
-  function openEdit(id) { openModal(id); }
-  function closeModal() { document.getElementById('overlay').classList.remove('active'); editId=null; }
+  function backToSessionGrid() { currentSessionView = null; renderSessionView(); }
 
-  document.getElementById('overlay').addEventListener('click', function(e){
-    if(e.target===this) closeModal();
-  });
+  // Delete & Edit integration
+  function deleteStudent(id) { if(confirm('Delete student permanently?')) { students = students.filter(s=>s.id!==id); saveToLocal(); renderMainTable(); if(document.getElementById('sessionView').style.display !== 'none') { if(currentSessionView) openSessionDetail(currentSessionView); else renderSessionView(); } toast('🗑 Deleted'); } }
+  function openEdit(id) { const student = students.find(s=>s.id===id); if(student) { editId = id; currentPhotoBase64 = student.photo || null; document.getElementById('modalTitle').innerText = 'Edit Student'; document.getElementById('f_name').value = student.name||''; document.getElementById('f_phone').value = student.phone||''; document.getElementById('f_email').value = student.email||''; document.getElementById('f_address').value = student.address||''; document.getElementById('f_father').value = student.father||''; document.getElementById('f_mother').value = student.mother||''; document.getElementById('f_blood').value = student.blood||''; document.getElementById('f_dept').value = student.dept||''; document.getElementById('f_year').value = student.year||''; document.getElementById('f_session').value = student.session||''; const previewImg = document.getElementById('photoPreview'); if(student.photo) previewImg.src = student.photo; else previewImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23cbd5e1'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"; document.getElementById('overlay').classList.add('active'); } }
+  function openModal(editMode=false) { editId = null; currentPhotoBase64 = null; document.getElementById('modalTitle').innerText = 'Add New Student'; document.querySelectorAll('#overlay input, #overlay select').forEach(el=>{ if(el.type!='file') el.value=''; }); document.getElementById('photoPreview').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23cbd5e1'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"; document.getElementById('photoInput').value = ''; document.getElementById('overlay').classList.add('active'); }
+  function closeModal() { document.getElementById('overlay').classList.remove('active'); editId = null; currentPhotoBase64 = null; }
 
-  /* ── SAVE ── */
   function saveStudent() {
-    const name = document.getElementById('f_name').value.trim();
-    const phone = document.getElementById('f_phone').value.trim();
-    const dept = document.getElementById('f_dept').value.trim();
-    if(!name){ toast('⚠️ Name is required','#b45309'); return; }
-    if(!phone){ toast('⚠️ Phone is required','#b45309'); return; }
-
-    const data = {
-      id: editId || uid(),
-      name, phone,
-      email: document.getElementById('f_email').value.trim(),
-      address: document.getElementById('f_address').value.trim(),
-      father: document.getElementById('f_father').value.trim(),
-      mother: document.getElementById('f_mother').value.trim(),
-      blood: document.getElementById('f_blood').value,
-      dept,
-      year: document.getElementById('f_year').value,
-      session: document.getElementById('f_session').value.trim(),
-    };
-
-    if(editId) {
-      const idx = students.findIndex(s=>s.id===editId);
-      students[idx] = data;
-      toast('✅ Student updated successfully!');
-    } else {
-      students.push(data);
-      toast('✅ Student added successfully!');
-    }
-    save(); closeModal(); renderTable();
+    const name = document.getElementById('f_name').value.trim(); const phone = document.getElementById('f_phone').value.trim(); const dept = document.getElementById('f_dept').value.trim(); const session = document.getElementById('f_session').value.trim();
+    if(!name || !phone || !dept || !session) { toast('⚠️ Name, Phone, Department & Session are required!', '#b45309'); return; }
+    const photoData = currentPhotoBase64 || (editId ? students.find(s=>s.id===editId)?.photo : null);
+    const newStudent = { id: editId || uid(), name, phone, email: document.getElementById('f_email').value.trim(), address: document.getElementById('f_address').value.trim(), father: document.getElementById('f_father').value.trim(), mother: document.getElementById('f_mother').value.trim(), blood: document.getElementById('f_blood').value, dept, year: document.getElementById('f_year').value, session, photo: photoData };
+    if(editId) { const idx = students.findIndex(s=>s.id===editId); if(idx!==-1) students[idx] = newStudent; toast('✅ Updated successfully'); }
+    else { students.push(newStudent); toast('🎉 New student added with photo'); }
+    saveToLocal(); closeModal(); renderMainTable(); if(document.getElementById('sessionView').style.display !== 'none') { if(currentSessionView) openSessionDetail(currentSessionView); else renderSessionView(); } 
   }
 
-  /* ── DELETE ── */
-  function deleteStudent(id) {
-    if(!confirm('Delete this student record?')) return;
-    students = students.filter(s=>s.id!==id);
-    save(); renderTable();
-    toast('🗑 Student deleted.','#7f1d1d');
+  function exportCSV() { if(!students.length){ toast('No data'); return; } const headers = ['Name','Phone','Email','Address','Father','Mother','Blood','Department','Year','Session','PhotoURL']; const rows = students.map(s=>[s.name,s.phone,s.email,s.address,s.father,s.mother,s.blood,s.dept,s.year,s.session, s.photo||''] .map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')); const csv = [headers.join(','), ...rows].join('\n'); const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv); a.download='jashore_kapotaksha_full.csv'; a.click(); toast('📥 CSV exported'); }
+  
+  // Tab switching
+  function switchTab(tabId) {
+    if(tabId === 'main') { document.getElementById('mainView').style.display = 'block'; document.getElementById('sessionView').style.display = 'none'; document.getElementById('mainToolbar').style.display = 'flex'; renderMainTable(); }
+    else { document.getElementById('mainView').style.display = 'none'; document.getElementById('sessionView').style.display = 'block'; document.getElementById('mainToolbar').style.display = 'none'; renderSessionView(); }
+    document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active')); document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
   }
-
-  /* ── EXPORT CSV ── */
-  function exportCSV() {
-    if(!students.length){ toast('No data to export','#b45309'); return; }
-    const headers = ['Name','Phone','Email','Address','Father','Mother','Blood Group','Department','Year','Session'];
-    const rows = students.map(s=>[s.name,s.phone,s.email,s.address,s.father,s.mother,s.blood,s.dept,s.year,s.session]
-      .map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
-    const csv = [headers.join(','), ...rows].join('\n');
-    const a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-    a.download = 'jessore_association_students.csv';
-    a.click();
-    toast('📥 CSV exported!');
-  }
-
-  /* ── INIT ── */
-  renderTable();
+  document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>switchTab(btn.dataset.tab)));
+  
+  // Initial render
+  renderMainTable();
+  updateStats();
 </script>
 </body>
 </html>
+```
