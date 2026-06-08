@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Jashore Association — Kapotaksha Database</title>
+<title>Kapotaksha DB — Session Sheets · Jashore Association</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -29,7 +29,7 @@
     min-height: 100vh;
   }
 
-  /* ── HEADER ── */
+  /* header */
   header {
     background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
     color: #fff;
@@ -42,6 +42,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 28px;
     gap: 16px;
+    flex-wrap: wrap;
   }
   .logo-area { display: flex; align-items: center; gap: 14px; }
   .logo-circle {
@@ -58,7 +59,7 @@
     font-size: 1.35rem; font-weight: 700; line-height: 1.2;
   }
   .org-sub { font-size: 0.78rem; color: rgba(255,255,255,0.75); letter-spacing: 0.08em; margin-top: 2px; }
-  .header-stats { display: flex; gap: 20px; }
+  .header-stats { display: flex; gap: 20px; flex-wrap: wrap; }
   .stat-pill {
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.2);
@@ -70,9 +71,55 @@
   }
   .stat-pill strong { display: block; font-size: 1.1rem; color: var(--gold); }
 
-  /* ── TOOLBAR ── */
+  /* session bar */
+  .session-bar {
+    max-width: 1200px;
+    margin: 24px auto 12px;
+    padding: 0 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 14px;
+  }
+  .session-selector {
+    background: white;
+    border: 2px solid var(--green);
+    border-radius: 40px;
+    padding: 8px 18px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--green-dark);
+    cursor: pointer;
+    outline: none;
+  }
+  .session-badge {
+    background: var(--green-light);
+    border-radius: 40px;
+    padding: 6px 18px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--green-dark);
+  }
+  .btn-session {
+    background: transparent;
+    border: 1.5px solid var(--green);
+    border-radius: 40px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--green);
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-session:hover {
+    background: var(--green);
+    color: white;
+  }
   .toolbar {
-    max-width: 1200px; margin: 28px auto 0; padding: 0 28px;
+    max-width: 1200px; margin: 0 auto; padding: 0 28px;
     display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
   }
   .search-wrap {
@@ -87,7 +134,6 @@
     font-family: inherit;
     background: #fff;
     outline: none;
-    transition: border-color .2s;
   }
   .search-wrap input:focus { border-color: var(--green); }
   .search-icon {
@@ -100,23 +146,19 @@
     border-radius: var(--radius);
     font-family: inherit; font-size: 0.92rem;
     background: #fff; outline: none; cursor: pointer;
-    transition: border-color .2s;
   }
-  select.filter-sel:focus { border-color: var(--green); }
   .btn {
     padding: 11px 20px; border-radius: var(--radius);
     border: none; cursor: pointer;
     font-family: inherit; font-size: 0.92rem; font-weight: 600;
-    transition: all .18s; display: flex; align-items: center; gap: 7px;
+    transition: all .18s; display: inline-flex; align-items: center; gap: 7px;
   }
   .btn-primary { background: var(--green); color: #fff; }
-  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
   .btn-gold { background: var(--gold); color: var(--green-dark); }
-  .btn-gold:hover { background: #b8943e; transform: translateY(-1px); }
   .btn-outline { background: #fff; color: var(--green); border: 2px solid var(--green); }
-  .btn-outline:hover { background: var(--green-light); }
 
-  /* ── MAIN TABLE AREA ── */
+  /* table */
   .main { max-width: 1200px; margin: 20px auto 60px; padding: 0 28px; }
   .table-card {
     background: #fff;
@@ -130,96 +172,88 @@
     padding: 14px 20px;
     display: flex; align-items: center; justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    font-size: 0.85rem; color: var(--green-dark); font-weight: 600;
+    font-size: 0.85rem; font-weight: 600;
+    color: var(--green-dark);
   }
   .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
   thead tr { background: var(--green); color: #fff; }
-  thead th {
-    padding: 12px 14px; text-align: left; font-weight: 600;
-    letter-spacing: 0.03em; white-space: nowrap;
-  }
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background .15s;
-  }
+  thead th { padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
   tbody tr:hover { background: var(--green-light); }
-  tbody td { padding: 11px 14px; vertical-align: middle; }
+  tbody td { padding: 10px 10px; vertical-align: middle; }
+  .photo-thumb {
+    width: 42px; height: 42px; object-fit: cover; border-radius: 50%;
+    background: #eef2f0; border: 1px solid var(--border);
+  }
   .blood-badge {
     display: inline-block; padding: 2px 9px; border-radius: 999px;
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em;
+    font-size: 0.75rem; font-weight: 700;
     background: #fee2e2; color: #991b1b;
   }
   .dept-badge {
     display: inline-block; padding: 2px 9px; border-radius: 6px;
-    font-size: 0.78rem; font-weight: 600;
+    font-size: 0.75rem; font-weight: 600;
     background: var(--gold-light); color: #7a5c0a;
   }
   .action-btn {
     padding: 5px 11px; border-radius: 7px; border: none;
-    cursor: pointer; font-size: 0.8rem; font-weight: 600;
-    font-family: inherit; transition: all .15s; margin-right: 4px;
+    cursor: pointer; font-size: 0.75rem; font-weight: 600;
+    margin-right: 4px;
   }
   .edit-btn { background: #dbeafe; color: #1d4ed8; }
-  .edit-btn:hover { background: #bfdbfe; }
   .del-btn { background: #fee2e2; color: #b91c1c; }
-  .del-btn:hover { background: #fecaca; }
-  .empty-state {
-    text-align: center; padding: 60px 20px; color: var(--muted);
-  }
-  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
-  .empty-state p { font-size: 1rem; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
 
-  /* ── MODAL ── */
+  /* modal */
   .overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.45); z-index: 200;
     align-items: center; justify-content: center;
-    animation: fadeIn .2s;
   }
   .overlay.active { display: flex; }
-  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
   .modal {
     background: #fff; border-radius: 20px;
-    width: min(680px, 96vw); max-height: 90vh; overflow-y: auto;
+    width: min(720px, 96vw); max-height: 90vh; overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    animation: slideUp .22s ease;
   }
-  @keyframes slideUp { from { transform: translateY(30px); opacity:0 } to { transform: translateY(0); opacity:1 } }
   .modal-header {
     background: linear-gradient(135deg, var(--green-dark), var(--green));
-    color: #fff; padding: 22px 28px;
+    color: #fff; padding: 18px 24px;
     display: flex; align-items: center; justify-content: space-between;
     border-radius: 20px 20px 0 0;
   }
-  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
   .close-btn {
     background: rgba(255,255,255,0.2); border: none; color: #fff;
     width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-    transition: background .15s;
   }
-  .close-btn:hover { background: rgba(255,255,255,0.35); }
-  .modal-body { padding: 28px; }
+  .modal-body { padding: 24px; }
   .form-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
   }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.full { grid-column: 1 / -1; }
-  label { font-size: 0.82rem; font-weight: 600; color: var(--green-dark); letter-spacing: 0.03em; }
-  .form-group input, .form-group select {
-    padding: 10px 13px;
-    border: 2px solid var(--border); border-radius: 9px;
-    font-family: inherit; font-size: 0.9rem; outline: none;
-    transition: border-color .18s; background: #fff;
+  label { font-size: 0.8rem; font-weight: 600; color: var(--green-dark); }
+  input, select, .file-label {
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 0.85rem;
   }
-  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
+  .photo-preview-area {
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    background: #fafaf8; padding: 12px; border-radius: 12px;
+  }
+  .preview-img {
+    width: 70px; height: 70px; border-radius: 12px; object-fit: cover;
+    border: 2px solid var(--gold);
+  }
   .modal-footer {
-    padding: 18px 28px; border-top: 1px solid var(--border);
-    display: flex; justify-content: flex-end; gap: 10px;
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end; gap: 12px;
   }
-
-  /* ── TOAST ── */
   .toast {
     position: fixed; bottom: 28px; right: 28px; z-index: 300;
     background: var(--green-dark); color: #fff;
@@ -230,85 +264,65 @@
     transition: all .3s cubic-bezier(.34,1.56,.64,1);
   }
   .toast.show { transform: translateY(0); opacity: 1; }
-
-  /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
-    .header-stats { display: none; }
     .form-grid { grid-template-columns: 1fr; }
     .toolbar { gap: 8px; }
+    .session-bar { flex-direction: column; align-items: stretch; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER with updated association name: Jashore District Students Association (Kapotaksha) -->
 <header>
   <div class="header-inner">
     <div class="logo-area">
       <div class="logo-circle">JA</div>
       <div>
         <div class="org-name">Jashore District Students Association (Kapotaksha)</div>
-        <div class="org-sub">STUDENT INFORMATION DATABASE — KAPOTAKSHA CHAPTER</div>
+        <div class="org-sub">SESSION-WISE DATABASE · KAPOTAKSHA CHAPTER</div>
       </div>
     </div>
     <div class="header-stats">
-      <div class="stat-pill"><strong id="totalCount">0</strong>Total</div>
-      <div class="stat-pill"><strong id="deptCount">0</strong>Departments</div>
+      <div class="stat-pill"><strong id="totalGlobal">0</strong>Total Students</div>
+      <div class="stat-pill"><strong id="sessionCountSpan">0</strong>Sessions</div>
+      <div class="stat-pill"><strong id="currentSessionStat">0</strong>In This Session</div>
     </div>
   </div>
 </header>
 
-<!-- TOOLBAR -->
+<!-- SESSION BAR: separate section per session -->
+<div class="session-bar">
+  <span style="font-weight:600; color:var(--green-dark);">📂 SESSION SHEET :</span>
+  <select id="sessionSelect" class="session-selector" onchange="switchSession()"></select>
+  <button class="btn-session" onclick="createNewSession()">➕ New Session</button>
+  <button class="btn-session" onclick="deleteCurrentSession()" style="border-color:#b91c1c; color:#b91c1c;">🗑 Delete Session (all its students)</button>
+  <div class="session-badge" id="activeSessionHint">Active sheet</div>
+</div>
+
+<!-- TOOLBAR with filters (apply to current session) -->
 <div class="toolbar">
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Search by name, phone, email, department…" oninput="renderTable()"/>
+    <input type="text" id="searchInput" placeholder="Search in current session..." oninput="renderTable()"/>
   </div>
-  <select class="filter-sel" id="deptFilter" onchange="renderTable()">
-    <option value="">All Departments</option>
-  </select>
-  <select class="filter-sel" id="yearFilter" onchange="renderTable()">
-    <option value="">All Years</option>
-    <option>1st Year</option>
-    <option>2nd Year</option>
-    <option>3rd Year</option>
-    <option>4th Year</option>
-  </select>
-  <select class="filter-sel" id="bloodFilter" onchange="renderTable()">
-    <option value="">All Blood Groups</option>
-    <option>A+</option><option>A-</option>
-    <option>B+</option><option>B-</option>
-    <option>O+</option><option>O-</option>
-    <option>AB+</option><option>AB-</option>
-  </select>
+  <select class="filter-sel" id="deptFilter" onchange="renderTable()"><option value="">All Depts</option></select>
+  <select class="filter-sel" id="yearFilter" onchange="renderTable()"><option value="">All Years</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
+  <select class="filter-sel" id="bloodFilter" onchange="renderTable()"><option value="">All Blood</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
   <button class="btn btn-primary" onclick="openModal()">＋ Add Student</button>
-  <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+  <button class="btn btn-gold" onclick="exportCurrentSessionCSV()">⬇ Export Session CSV</button>
 </div>
 
 <!-- MAIN TABLE -->
 <div class="main">
   <div class="table-card">
     <div class="table-header">
-      <span id="resultCount">Showing all students</span>
-      <span style="color:var(--muted); font-weight:400">Kapotaksha Data | Stored Locally</span>
+      <span id="resultCount">Loading ...</span>
+      <span>📸 Kapotaksha • Session based sheets</span>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Father's Name</th>
-            <th>Mother's Name</th>
-            <th>Blood</th>
-            <th>Department</th>
-            <th>Year</th>
-            <th>Session</th>
-            <th>Actions</th>
-          </tr>
+          <tr><th>#</th><th>Photo</th><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Father</th><th>Mother</th><th>Blood</th><th>Department</th><th>Year</th><th>Session</th><th>Actions</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -316,231 +330,294 @@
   </div>
 </div>
 
-<!-- ADD/EDIT MODAL -->
+<!-- MODAL (Add / Edit with photo upload) -->
 <div class="overlay" id="overlay">
   <div class="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Add New Student</h2>
-      <button class="close-btn" onclick="closeModal()">✕</button>
-    </div>
+    <div class="modal-header"><h2 id="modalTitle">Add Student</h2><button class="close-btn" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group full">
-          <label>FULL NAME *</label>
-          <input id="f_name" type="text" placeholder="e.g. Md. Rakibul Islam"/>
+        <div class="form-group full"><label>📸 STUDENT PHOTO (max 2MB)</label>
+          <div class="photo-preview-area">
+            <img id="photoPreview" class="preview-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="preview">
+            <input type="file" id="photoUpload" accept="image/jpeg,image/png,image/jpg" style="flex:1">
+            <button type="button" class="btn-outline" style="padding:6px 12px;" onclick="clearPhoto()">Clear Photo</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>PHONE NUMBER *</label>
-          <input id="f_phone" type="tel" placeholder="01XXXXXXXXX"/>
-        </div>
-        <div class="form-group">
-          <label>EMAIL ADDRESS</label>
-          <input id="f_email" type="email" placeholder="student@example.com"/>
-        </div>
-        <div class="form-group full">
-          <label>ADDRESS</label>
-          <input id="f_address" type="text" placeholder="Village, Upazila, District"/>
-        </div>
-        <div class="form-group">
-          <label>FATHER'S NAME</label>
-          <input id="f_father" type="text" placeholder="Father's full name"/>
-        </div>
-        <div class="form-group">
-          <label>MOTHER'S NAME</label>
-          <input id="f_mother" type="text" placeholder="Mother's full name"/>
-        </div>
-        <div class="form-group">
-          <label>BLOOD GROUP</label>
-          <select id="f_blood">
-            <option value="">— Select —</option>
-            <option>A+</option><option>A-</option>
-            <option>B+</option><option>B-</option>
-            <option>O+</option><option>O-</option>
-            <option>AB+</option><option>AB-</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>DEPARTMENT *</label>
-          <input id="f_dept" type="text" placeholder="e.g. CSE, EEE, BBA…"/>
-        </div>
-        <div class="form-group">
-          <label>YEAR</label>
-          <select id="f_year">
-            <option value="">— Select —</option>
-            <option>1st Year</option>
-            <option>2nd Year</option>
-            <option>3rd Year</option>
-            <option>4th Year</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>SESSION</label>
-          <input id="f_session" type="text" placeholder="e.g. 2022-23"/>
+        <div class="form-group full"><label>FULL NAME *</label><input id="f_name" placeholder="e.g. Md. Rakibul Islam"/></div>
+        <div class="form-group"><label>PHONE *</label><input id="f_phone" placeholder="01XXXXXXXXX"/></div>
+        <div class="form-group"><label>EMAIL</label><input id="f_email" placeholder="student@example.com"/></div>
+        <div class="form-group full"><label>ADDRESS</label><input id="f_address" placeholder="Village, Upazila, District"/></div>
+        <div class="form-group"><label>FATHER'S NAME</label><input id="f_father"/></div>
+        <div class="form-group"><label>MOTHER'S NAME</label><input id="f_mother"/></div>
+        <div class="form-group"><label>BLOOD GROUP</label><select id="f_blood"><option value="">— Select —</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
+        <div class="form-group"><label>DEPARTMENT *</label><input id="f_dept" placeholder="CSE, EEE, BBA..."/></div>
+        <div class="form-group"><label>YEAR</label><select id="f_year"><option value="">— Select —</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></div>
+        <div class="form-group"><label>ACADEMIC SESSION</label>
+          <select id="f_sessionSelect" onchange="manualSessionChange()"></select>
+          <input type="text" id="f_sessionCustom" placeholder="Or type new session" style="margin-top:6px;"/>
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveStudent()">💾 Save Student</button>
-    </div>
+    <div class="modal-footer"><button class="btn-outline" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveStudent()">💾 Save Student</button></div>
   </div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-  // Updated storage key to reflect Jashore Kapotaksha identity (preserves existing data if any)
-  const STORAGE_KEY = 'jashore_kapotaksha_students';
-  let students = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const STORAGE_KEY = 'jashore_kapotaksha_students_v2';
+  let students = [];
+  let currentSession = "";
   let editId = null;
+  let tempPhotoBase64 = "";
 
-  /* ── HELPERS ── */
-  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); }
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function toast(msg, color='var(--green-dark)') {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.style.background = color;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
+  function loadData() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if(stored) {
+      students = JSON.parse(stored);
+    } else {
+      const oldKey = 'jashore_kapotaksha_students';
+      const old = localStorage.getItem(oldKey);
+      if(old) {
+        students = JSON.parse(old);
+        students = students.map(s => ({ ...s, photo: s.photo || "" }));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+        localStorage.removeItem(oldKey);
+      } else {
+        students = [];
+      }
+    }
+    students = students.map(s => ({ ...s, photo: s.photo || "" }));
+    if(students.length === 0) {
+      currentSession = "2024-25";
+    } else {
+      const sessionsSet = new Set(students.map(s => s.session).filter(Boolean));
+      if(!currentSession || !sessionsSet.has(currentSession)) {
+        currentSession = sessionsSet.size ? Array.from(sessionsSet)[0] : "2024-25";
+      }
+    }
+    saveToLocal();
   }
 
-  /* ── RENDER TABLE ── */
+  function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); }
+
+  function getAllSessions() { return [...new Set(students.map(s=>s.session).filter(Boolean))].sort(); }
+
+  function updateSessionSelectors() {
+    const sessions = getAllSessions();
+    const select = document.getElementById('sessionSelect');
+    if(select) {
+      let html = '';
+      sessions.forEach(ss => { html += `<option value="${escapeHtml(ss)}" ${currentSession===ss ? 'selected' : ''}>📁 ${escapeHtml(ss)}</option>`; });
+      if(sessions.length===0) html = '<option value="">— No session, create one —</option>';
+      select.innerHTML = html;
+    }
+    document.getElementById('sessionCountSpan').innerText = sessions.length;
+    document.getElementById('currentSessionStat').innerText = students.filter(s=>s.session===currentSession).length;
+    document.getElementById('totalGlobal').innerText = students.length;
+    document.getElementById('activeSessionHint').innerHTML = `Active: ${escapeHtml(currentSession)}`;
+  }
+
+  function updateModalSessionDropdown() {
+    const sessions = getAllSessions();
+    const select = document.getElementById('f_sessionSelect');
+    let opts = '<option value="">— Choose existing —</option>';
+    sessions.forEach(ss => { opts += `<option value="${escapeHtml(ss)}">${escapeHtml(ss)}</option>`; });
+    opts += `<option value="__new">➕ Create new session...</option>`;
+    select.innerHTML = opts;
+    if(editId) {
+      const student = students.find(s=>s.id===editId);
+      if(student && student.session) {
+        if(sessions.includes(student.session)) select.value = student.session;
+        else document.getElementById('f_sessionCustom').value = student.session;
+      } else {
+        document.getElementById('f_sessionCustom').value = currentSession;
+      }
+    } else {
+      document.getElementById('f_sessionCustom').value = currentSession;
+    }
+  }
+
+  function manualSessionChange() {
+    const val = document.getElementById('f_sessionSelect').value;
+    if(val === "__new") {
+      const newSes = prompt("Enter new session name (e.g., 2025-26):");
+      if(newSes && newSes.trim()) {
+        document.getElementById('f_sessionCustom').value = newSes.trim();
+        document.getElementById('f_sessionSelect').value = "";
+      } else {
+        document.getElementById('f_sessionSelect').value = "";
+      }
+    } else if(val) {
+      document.getElementById('f_sessionCustom').value = val;
+    }
+  }
+
+  function getFinalSessionFromModal() {
+    let custom = document.getElementById('f_sessionCustom').value.trim();
+    if(!custom) custom = currentSession;
+    return custom;
+  }
+
   function renderTable() {
-    const q   = document.getElementById('searchInput').value.toLowerCase();
+    if(!currentSession) { document.getElementById('tableBody').innerHTML = '<tr><td colspan="13"><div class="empty-state">No session selected</div></td></tr>'; return; }
+    const q = document.getElementById('searchInput').value.toLowerCase();
     const dept = document.getElementById('deptFilter').value;
     const year = document.getElementById('yearFilter').value;
     const blood = document.getElementById('bloodFilter').value;
-
-    let filtered = students.filter(s => {
+    let filtered = students.filter(s => s.session === currentSession);
+    filtered = filtered.filter(s => {
       const matchQ = !q || [s.name,s.phone,s.email,s.dept,s.session,s.address].join(' ').toLowerCase().includes(q);
       const matchD = !dept || s.dept === dept;
       const matchY = !year || s.year === year;
       const matchB = !blood || s.blood === blood;
       return matchQ && matchD && matchY && matchB;
     });
-
+    document.getElementById('resultCount').innerText = filtered.length === students.filter(s=>s.session===currentSession).length 
+      ? `Showing ${filtered.length} / ${students.filter(s=>s.session===currentSession).length} students in "${currentSession}"`
+      : `Filtered: ${filtered.length} of ${students.filter(s=>s.session===currentSession).length}`;
     const tbody = document.getElementById('tableBody');
-    document.getElementById('resultCount').textContent =
-      filtered.length === students.length
-        ? `Showing all ${students.length} student${students.length!==1?'s':''}`
-        : `Showing ${filtered.length} of ${students.length} students`;
-
-    if (!filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="12">
-        <div class="empty-state">
-          <div class="icon">🎓</div>
-          <p>${students.length ? 'No students match your filters.' : 'Welcome to Kapotaksha! No students yet. Click <strong>+ Add Student</strong> to begin.'}</p>
-        </div></td></tr>`;
-      updateStats(); return;
+    if(filtered.length===0) {
+      tbody.innerHTML = `<tr><td colspan="13"><div class="empty-state">🎓 No students in this session. Add new student.</div></td></tr>`;
+      updateDeptFilterOptions();
+      return;
     }
-
-    tbody.innerHTML = filtered.map((s, i) => `
+    tbody.innerHTML = filtered.map((s,idx) => `
       <tr>
-        <td style="color:var(--muted);font-size:.8rem">${i+1}</td>
-        <td><strong>${esc(s.name)}</strong></td>
-        <td>${esc(s.phone)}</td>
-        <td style="font-size:.82rem;color:var(--muted)">${esc(s.email)}</td>
-        <td style="font-size:.82rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.address)}">${esc(s.address)}</td>
-        <td>${esc(s.father)}</td>
-        <td>${esc(s.mother)}</td>
-        <td>${s.blood ? `<span class="blood-badge">${esc(s.blood)}</span>` : '—'}</td>
-        <td>${s.dept ? `<span class="dept-badge">${esc(s.dept)}</span>` : '—'}</td>
-        <td>${esc(s.year)||'—'}</td>
-        <td>${esc(s.session)||'—'}</td>
-        <td style="white-space:nowrap">
-          <button class="action-btn edit-btn" onclick="openEdit('${s.id}')">✏️ Edit</button>
-          <button class="action-btn del-btn" onclick="deleteStudent('${s.id}')">🗑 Del</button>
-        </td>
+        <td>${idx+1}</td>
+        <td>${s.photo ? `<img src="${escapeHtml(s.photo)}" class="photo-thumb" alt="photo" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23ccc%22%3E%3Cpath%20d%3D%22M12%2012c2.21%200%204-1.79%204-4s-1.79-4-4-4-4%201.79-4%204%201.79%204%204%204zm0%202c-2.67%200-8%201.34-8%204v2h16v-2c0-2.66-5.33-4-8-4z%22%2F%3E%3C%2Fsvg%3E'">` : `<div class="photo-thumb" style="background:#e2e8f0; display:flex;align-items:center;justify-content:center;">📷</div>`}</td>
+        <td><strong>${escapeHtml(s.name)}</strong></td>
+        <td>${escapeHtml(s.phone)}</td>
+        <td style="font-size:.8rem">${escapeHtml(s.email)}</td>
+        <td style="max-width:130px; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(s.address)}">${escapeHtml(s.address)}</td>
+        <td>${escapeHtml(s.father)}</td>
+        <td>${escapeHtml(s.mother)}</td>
+        <td>${s.blood ? `<span class="blood-badge">${escapeHtml(s.blood)}</span>` : '—'}</td>
+        <td>${s.dept ? `<span class="dept-badge">${escapeHtml(s.dept)}</span>` : '—'}</td>
+        <td>${escapeHtml(s.year)||'—'}</td>
+        <td>${escapeHtml(s.session)||'—'}</td>
+        <td><button class="action-btn edit-btn" onclick="openEdit('${s.id}')">✏️ Edit</button><button class="action-btn del-btn" onclick="deleteStudent('${s.id}')">🗑 Del</button></td>
       </tr>`).join('');
-    updateStats();
+    updateDeptFilterOptions();
   }
 
-  function updateStats() {
-    document.getElementById('totalCount').textContent = students.length;
-    const depts = new Set(students.map(s=>s.dept).filter(Boolean));
-    document.getElementById('deptCount').textContent = depts.size;
-    // update dept filter dropdown
-    const df = document.getElementById('deptFilter');
-    const cur = df.value;
-    df.innerHTML = '<option value="">All Departments</option>' +
-      [...depts].sort().map(d=>`<option${d===cur?' selected':''}>${esc(d)}</option>`).join('');
+  function updateDeptFilterOptions() {
+    const sessionStudents = students.filter(s=>s.session===currentSession);
+    const depts = [...new Set(sessionStudents.map(s=>s.dept).filter(Boolean))].sort();
+    const deptSelect = document.getElementById('deptFilter');
+    const curVal = deptSelect.value;
+    deptSelect.innerHTML = '<option value="">All Departments</option>' + depts.map(d=>`<option ${d===curVal?'selected':''}>${escapeHtml(d)}</option>`).join('');
   }
 
-  /* ── MODAL ── */
+  function switchSession() { const sel = document.getElementById('sessionSelect').value; if(sel) { currentSession = sel; renderTable(); updateSessionSelectors(); } }
+  function createNewSession() { const newS = prompt("Enter new session name (e.g. 2025-26):"); if(newS && newS.trim()) { currentSession = newS.trim(); if(!students.some(s=>s.session===currentSession)) saveToLocal(); renderTable(); updateSessionSelectors(); toast(`✅ Session "${currentSession}" active.`); } }
+  function deleteCurrentSession() { if(!currentSession) return; const count = students.filter(s=>s.session===currentSession).length; if(count===0) { toast("No students to delete","#b45309"); return; } if(confirm(`⚠️ Permanently delete entire session "${currentSession}" with ${count} student(s)?`)) { students = students.filter(s=>s.session !== currentSession); saveToLocal(); const sessionsRemaining = getAllSessions(); if(sessionsRemaining.length) currentSession = sessionsRemaining[0]; else currentSession = "2024-25"; renderTable(); updateSessionSelectors(); toast(`🗑 Session deleted.`); } }
+
   function openModal(id=null) {
     editId = id;
-    const s = id ? students.find(x=>x.id===id) : null;
-    document.getElementById('modalTitle').textContent = id ? 'Edit Student (Kapotaksha)' : 'Add New Student';
-    ['name','phone','email','address','father','mother','blood','dept','year','session'].forEach(k=>{
-      document.getElementById('f_'+k).value = s ? s[k]||'' : '';
-    });
+    const student = id ? students.find(x=>x.id===id) : null;
+    document.getElementById('modalTitle').innerText = id ? "✏️ Edit Student (Kapotaksha)" : "➕ Add Student";
+    ['name','phone','email','address','father','mother','dept','year'].forEach(k=>{ document.getElementById(`f_${k}`).value = student ? (student[k]||'') : ''; });
+    document.getElementById('f_blood').value = student?.blood||"";
+    if(student?.photo) { tempPhotoBase64 = student.photo; document.getElementById('photoPreview').src = student.photo; } else { tempPhotoBase64 = ""; document.getElementById('photoPreview').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"; }
+    updateModalSessionDropdown();
+    if(student && student.session) {
+      document.getElementById('f_sessionCustom').value = student.session;
+      const sessSelect = document.getElementById('f_sessionSelect');
+      if(Array.from(sessSelect.options).some(opt=>opt.value===student.session)) sessSelect.value = student.session;
+      else sessSelect.value = "";
+    } else {
+      document.getElementById('f_sessionCustom').value = currentSession;
+      document.getElementById('f_sessionSelect').value = "";
+    }
     document.getElementById('overlay').classList.add('active');
+    setupPhotoUpload();
   }
-  function openEdit(id) { openModal(id); }
-  function closeModal() { document.getElementById('overlay').classList.remove('active'); editId=null; }
-
-  document.getElementById('overlay').addEventListener('click', function(e){
-    if(e.target===this) closeModal();
-  });
-
-  /* ── SAVE ── */
+  function openEdit(id){ openModal(id); }
+  function closeModal(){ document.getElementById('overlay').classList.remove('active'); editId=null; tempPhotoBase64=""; }
+  function clearPhoto(){ tempPhotoBase64=""; document.getElementById('photoPreview').src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"; toast("Photo removed"); }
+  function setupPhotoUpload() {
+    const input = document.getElementById('photoUpload');
+    input.onchange = function(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+      if(file.size > 2.5*1024*1024) { toast("Image too large (max 2.5MB)","#b45309"); return; }
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width, height = img.height;
+          const maxSize = 200;
+          if(width>height && width>maxSize) { height = (height*maxSize)/width; width = maxSize; }
+          else if(height>maxSize) { width = (width*maxSize)/height; height = maxSize; }
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d'); ctx.drawImage(img,0,0,width,height);
+          const base64 = canvas.toDataURL('image/jpeg',0.75);
+          tempPhotoBase64 = base64;
+          document.getElementById('photoPreview').src = base64;
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+  }
   function saveStudent() {
     const name = document.getElementById('f_name').value.trim();
     const phone = document.getElementById('f_phone').value.trim();
     const dept = document.getElementById('f_dept').value.trim();
-    if(!name){ toast('⚠️ Student name is required','#b45309'); return; }
-    if(!phone){ toast('⚠️ Phone number is required','#b45309'); return; }
-
+    if(!name){ toast("Name required","#b45309"); return; }
+    if(!phone){ toast("Phone required","#b45309"); return; }
+    let finalSession = getFinalSessionFromModal();
+    if(!finalSession) finalSession = currentSession || "2024-25";
     const data = {
-      id: editId || uid(),
-      name, phone,
-      email: document.getElementById('f_email').value.trim(),
+      id: editId || Date.now().toString(36)+Math.random().toString(36),
+      name, phone, email: document.getElementById('f_email').value.trim(),
       address: document.getElementById('f_address').value.trim(),
       father: document.getElementById('f_father').value.trim(),
       mother: document.getElementById('f_mother').value.trim(),
       blood: document.getElementById('f_blood').value,
-      dept,
-      year: document.getElementById('f_year').value,
-      session: document.getElementById('f_session').value.trim(),
+      dept, year: document.getElementById('f_year').value,
+      session: finalSession,
+      photo: tempPhotoBase64 || ""
     };
-
     if(editId) {
       const idx = students.findIndex(s=>s.id===editId);
-      students[idx] = data;
-      toast('✅ Student record updated in Kapotaksha Database');
+      if(idx!==-1) students[idx] = data;
+      toast("✅ Student updated");
     } else {
       students.push(data);
-      toast('🎉 New student added to Jashore Association (Kapotaksha)');
+      toast("🎉 Student added with photo");
     }
-    save(); closeModal(); renderTable();
+    saveToLocal();
+    if(!getAllSessions().includes(finalSession)) currentSession = finalSession;
+    else if(currentSession !== finalSession) {}
+    else currentSession = finalSession;
+    closeModal();
+    renderTable();
+    updateSessionSelectors();
   }
-
-  /* ── DELETE ── */
   function deleteStudent(id) {
-    if(!confirm('Delete this student from Kapotaksha records?')) return;
+    if(!confirm("Delete student permanently?")) return;
     students = students.filter(s=>s.id!==id);
-    save(); renderTable();
-    toast('🗑 Student record permanently deleted.','#7f1d1d');
+    saveToLocal();
+    renderTable(); updateSessionSelectors();
+    toast("Student removed");
   }
-
-  /* ── EXPORT CSV with updated header identity ── */
-  function exportCSV() {
-    if(!students.length){ toast('No data to export from Kapotaksha','#b45309'); return; }
-    const headers = ['Name','Phone','Email','Address','Father','Mother','Blood Group','Department','Year','Session'];
-    const rows = students.map(s=>[s.name,s.phone,s.email,s.address,s.father,s.mother,s.blood,s.dept,s.year,s.session]
-      .map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+  function exportCurrentSessionCSV() {
+    const sessionStudents = students.filter(s=>s.session===currentSession);
+    if(!sessionStudents.length){ toast("No data to export in this session","#b45309"); return; }
+    const headers = ['Name','Phone','Email','Address','Father','Mother','Blood','Department','Year','Session'];
+    const rows = sessionStudents.map(s=>[s.name,s.phone,s.email,s.address,s.father,s.mother,s.blood,s.dept,s.year,s.session].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
     const csv = [headers.join(','), ...rows].join('\n');
     const a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-    a.download = 'jashore_kapotaksha_students.csv';
-    a.click();
-    toast('📥 CSV exported — Kapotaksha chapter');
+    a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download = `kapotaksha_${currentSession}.csv`;
+    a.click(); toast("📥 Session CSV exported");
   }
-
-  /* ── INIT ── */
-  renderTable();
+  function toast(msg, bg='var(--green-dark)') { const t=document.getElementById('toast'); t.textContent=msg; t.style.background=bg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+  function escapeHtml(str){ if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
+  document.getElementById('overlay').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+  loadData(); updateSessionSelectors(); renderTable();
 </script>
 </body>
 </html>
