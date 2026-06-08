@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Jessore Association — Student Database</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green: #1a6b3c;
+    --green-dark: #0f4526;
+    --green-light: #e8f5ee;
+    --gold: #c9a84c;
+    --gold-light: #f5e9c8;
+    --white: #fdfcf8;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --border: #d4e6da;
+    --red: #dc2626;
+    --shadow: 0 4px 24px rgba(26,107,60,0.10);
+    --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+    color: #fff;
+    padding: 0;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px;
+    gap: 16px;
+  }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 900; color: var(--green-dark);
+    box-shadow: 0 2px 8px rgba(201,168,76,0.4);
+    flex-shrink: 0;
+  }
+  .org-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; font-weight: 700; line-height: 1.2;
+  }
+  .org-sub { font-size: 0.78rem; color: rgba(255,255,255,0.75); letter-spacing: 0.08em; margin-top: 2px; }
+  .header-stats { display: flex; gap: 20px; }
+  .stat-pill {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 6px 16px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.9);
+  }
+  .stat-pill strong { display: block; font-size: 1.1rem; color: var(--gold); }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    max-width: 1200px; margin: 28px auto 0; padding: 0 28px;
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  }
+  .search-wrap {
+    flex: 1; min-width: 220px; position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 11px 16px 11px 44px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.92rem;
+    font-family: inherit;
+    background: #fff;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .search-wrap input:focus { border-color: var(--green); }
+  .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 1rem; pointer-events: none;
+  }
+  select.filter-sel {
+    padding: 11px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit; font-size: 0.92rem;
+    background: #fff; outline: none; cursor: pointer;
+    transition: border-color .2s;
+  }
+  select.filter-sel:focus { border-color: var(--green); }
+  .btn {
+    padding: 11px 20px; border-radius: var(--radius);
+    border: none; cursor: pointer;
+    font-family: inherit; font-size: 0.92rem; font-weight: 600;
+    transition: all .18s; display: flex; align-items: center; gap: 7px;
+  }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-gold { background: var(--gold); color: var(--green-dark); }
+  .btn-gold:hover { background: #b8943e; transform: translateY(-1px); }
+  .btn-outline { background: #fff; color: var(--green); border: 2px solid var(--green); }
+  .btn-outline:hover { background: var(--green-light); }
+
+  /* ── MAIN TABLE AREA ── */
+  .main { max-width: 1200px; margin: 20px auto 60px; padding: 0 28px; }
+  .table-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .table-header {
+    background: var(--green-light);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem; color: var(--green-dark); font-weight: 600;
+  }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--green); color: #fff; }
+  thead th {
+    padding: 12px 14px; text-align: left; font-weight: 600;
+    letter-spacing: 0.03em; white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+  }
+  tbody tr:hover { background: var(--green-light); }
+  tbody td { padding: 11px 14px; vertical-align: middle; }
+  .blood-badge {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em;
+    background: #fee2e2; color: #991b1b;
+  }
+  .dept-badge {
+    display: inline-block; padding: 2px 9px; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 600;
+    background: var(--gold-light); color: #7a5c0a;
+  }
+  .action-btn {
+    padding: 5px 11px; border-radius: 7px; border: none;
+    cursor: pointer; font-size: 0.8rem; font-weight: 600;
+    font-family: inherit; transition: all .15s; margin-right: 4px;
+  }
+  .edit-btn { background: #dbeafe; color: #1d4ed8; }
+  .edit-btn:hover { background: #bfdbfe; }
+  .del-btn { background: #fee2e2; color: #b91c1c; }
+  .del-btn:hover { background: #fecaca; }
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 1rem; }
+
+  /* ── MODAL ── */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45); z-index: 200;
+    align-items: center; justify-content: center;
+    animation: fadeIn .2s;
+  }
+  .overlay.active { display: flex; }
+  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+  .modal {
+    background: #fff; border-radius: 20px;
+    width: min(680px, 96vw); max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: slideUp .22s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(30px); opacity:0 } to { transform: translateY(0); opacity:1 } }
+  .modal-header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    color: #fff; padding: 22px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .close-btn {
+    background: rgba(255,255,255,0.2); border: none; color: #fff;
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.35); }
+  .modal-body { padding: 28px; }
+  .form-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.82rem; font-weight: 600; color: var(--green-dark); letter-spacing: 0.03em; }
+  .form-group input, .form-group select {
+    padding: 10px 13px;
+    border: 2px solid var(--border); border-radius: 9px;
+    font-family: inherit; font-size: 0.9rem; outline: none;
+    transition: border-color .18s; background: #fff;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
+  .modal-footer {
+    padding: 18px 28px; border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end; gap: 10px;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 300;
+    background: var(--green-dark); color: #fff;
+    padding: 13px 22px; border-radius: 12px;
+    font-size: 0.9rem; font-weight: 500;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+    transform: translateY(80px); opacity: 0;
+    transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .header-stats { display: none; }
+    .form-grid { grid-template-columns: 1fr; }
+    .toolbar { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-circle">JA</div>
+      <div>
+        <div class="org-name">Jessore Association</div>
+        <div class="org-sub">STUDENT INFORMATION DATABASE</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill"><strong id="totalCount">0</strong>Total</div>
+      <div class="stat-pill"><strong id="deptCount">0</strong>Departments</div>
+    </div>
+  </div>
+</header>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search by name, phone, email, department…" oninput="renderTable()"/>
+  </div>
+  <select class="filter-sel" id="deptFilter" onchange="renderTable()">
+    <option value="">All Departments</option>
+  </select>
+  <select class="filter-sel" id="yearFilter" onchange="renderTable()">
+    <option value="">All Years</option>
+    <option>1st Year</option>
+    <option>2nd Year</option>
+    <option>3rd Year</option>
+    <option>4th Year</option>
+  </select>
+  <select class="filter-sel" id="bloodFilter" onchange="renderTable()">
+    <option value="">All Blood Groups</option>
+    <option>A+</option><option>A-</option>
+    <option>B+</option><option>B-</option>
+    <option>O+</option><option>O-</option>
+    <option>AB+</option><option>AB-</option>
+  </select>
+  <button class="btn btn-primary" onclick="openModal()">＋ Add Student</button>
+  <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+</div>
+
+<!-- MAIN TABLE -->
+<div class="main">
+  <div class="table-card">
+    <div class="table-header">
+      <span id="resultCount">Showing all students</span>
+      <span style="color:var(--muted); font-weight:400">Data saved in your browser</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Father's Name</th>
+            <th>Mother's Name</th>
+            <th>Blood</th>
+            <th>Department</th>
+            <th>Year</th>
+            <th>Session</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add New Student</h2>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>FULL NAME *</label>
+          <input id="f_name" type="text" placeholder="e.g. Md. Rakibul Islam"/>
+        </div>
+        <div class="form-group">
+          <label>PHONE NUMBER *</label>
+          <input id="f_phone" type="tel" placeholder="01XXXXXXXXX"/>
+        </div>
+        <div class="form-group">
+          <label>EMAIL ADDRESS</label>
+          <input id="f_email" type="email" placeholder="student@example.com"/>
+        </div>
+        <div class="form-group full">
+          <label>ADDRESS</label>
+          <input id="f_address" type="text" placeholder="Village, Upazila, District"/>
+        </div>
+        <div class="form-group">
+          <label>FATHER'S NAME</label>
+          <input id="f_father" type="text" placeholder="Father's full name"/>
+        </div>
+        <div class="form-group">
+          <label>MOTHER'S NAME</label>
+          <input id="f_mother" type="text" placeholder="Mother's full name"/>
+        </div>
+        <div class="form-group">
+          <label>BLOOD GROUP</label>
+          <select id="f_blood">
+            <option value="">— Select —</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>O+</option><option>O-</option>
+            <option>AB+</option><option>AB-</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>DEPARTMENT *</label>
+          <input id="f_dept" type="text" placeholder="e.g. CSE, EEE, BBA…"/>
+        </div>
+        <div class="form-group">
+          <label>YEAR</label>
+          <select id="f_year">
+            <option value="">— Select —</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>SESSION</label>
+          <input id="f_session" type="text" placeholder="e.g. 2022-23"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStudent()">💾 Save Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'jessore_students';
+  let students = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let editId = null;
+
+  /* ── HELPERS ── */
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(students)); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function toast(msg, color='var(--green-dark)') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.background = color;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── RENDER TABLE ── */
+  function renderTable() {
+    const q   = document.getElementById('searchInput').value.toLowerCase();
+    const dept = document.getElementById('deptFilter').value;
+    const year = document.getElementById('yearFilter').value;
+    const blood = document.getElementById('bloodFilter').value;
+
+    let filtered = students.filter(s => {
+      const matchQ = !q || [s.name,s.phone,s.email,s.dept,s.session,s.address].join(' ').toLowerCase().includes(q);
+      const matchD = !dept || s.dept === dept;
+      const matchY = !year || s.year === year;
+      const matchB = !blood || s.blood === blood;
+      return matchQ && matchD && matchY && matchB;
+    });
+
+    const tbody = document.getElementById('tableBody');
+    document.getElementById('resultCount').textContent =
+      filtered.length === students.length
+        ? `Showing all ${students.length} student${students.length!==1?'s':''}`
+        : `Showing ${filtered.length} of ${students.length} students`;
+
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="12">
+        <div class="empty-state">
+          <div class="icon">🎓</div>
+          <p>${students.length ? 'No students match your filters.' : 'No students yet. Click <strong>+ Add Student</strong> to get started.'}</p>
+        </div></td></tr>`;
+      updateStats(); return;
+    }
+
+    tbody.innerHTML = filtered.map((s, i) => `
+      <tr>
+        <td style="color:var(--muted);font-size:.8rem">${i+1}</td>
+        <td><strong>${esc(s.name)}</strong></td>
+        <td>${esc(s.phone)}</td>
+        <td style="font-size:.82rem;color:var(--muted)">${esc(s.email)}</td>
+        <td style="font-size:.82rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.address)}">${esc(s.address)}</td>
+        <td>${esc(s.father)}</td>
+        <td>${esc(s.mother)}</td>
+        <td>${s.blood ? `<span class="blood-badge">${esc(s.blood)}</span>` : '—'}</td>
+        <td>${s.dept ? `<span class="dept-badge">${esc(s.dept)}</span>` : '—'}</td>
+        <td>${esc(s.year)||'—'}</td>
+        <td>${esc(s.session)||'—'}</td>
+        <td style="white-space:nowrap">
+          <button class="action-btn edit-btn" onclick="openEdit('${s.id}')">✏️ Edit</button>
+          <button class="action-btn del-btn" onclick="deleteStudent('${s.id}')">🗑 Del</button>
+        </td>
+      </tr>`).join('');
+    updateStats();
+  }
+
+  function updateStats() {
+    document.getElementById('totalCount').textContent = students.length;
+    const depts = new Set(students.map(s=>s.dept).filter(Boolean));
+    document.getElementById('deptCount').textContent = depts.size;
+    // update dept filter
+    const df = document.getElementById('deptFilter');
+    const cur = df.value;
+    df.innerHTML = '<option value="">All Departments</option>' +
+      [...depts].sort().map(d=>`<option${d===cur?' selected':''}>${d}</option>`).join('');
+  }
+
+  /* ── MODAL ── */
+  function openModal(id=null) {
+    editId = id;
+    const s = id ? students.find(x=>x.id===id) : null;
+    document.getElementById('modalTitle').textContent = id ? 'Edit Student' : 'Add New Student';
+    ['name','phone','email','address','father','mother','blood','dept','year','session'].forEach(k=>{
+      document.getElementById('f_'+k).value = s ? s[k]||'' : '';
+    });
+    document.getElementById('overlay').classList.add('active');
+  }
+  function openEdit(id) { openModal(id); }
+  function closeModal() { document.getElementById('overlay').classList.remove('active'); editId=null; }
+
+  document.getElementById('overlay').addEventListener('click', function(e){
+    if(e.target===this) closeModal();
+  });
+
+  /* ── SAVE ── */
+  function saveStudent() {
+    const name = document.getElementById('f_name').value.trim();
+    const phone = document.getElementById('f_phone').value.trim();
+    const dept = document.getElementById('f_dept').value.trim();
+    if(!name){ toast('⚠️ Name is required','#b45309'); return; }
+    if(!phone){ toast('⚠️ Phone is required','#b45309'); return; }
+
+    const data = {
+      id: editId || uid(),
+      name, phone,
+      email: document.getElementById('f_email').value.trim(),
+      address: document.getElementById('f_address').value.trim(),
+      father: document.getElementById('f_father').value.trim(),
+      mother: document.getElementById('f_mother').value.trim(),
+      blood: document.getElementById('f_blood').value,
+      dept,
+      year: document.getElementById('f_year').value,
+      session: document.getElementById('f_session').value.trim(),
+    };
+
+    if(editId) {
+      const idx = students.findIndex(s=>s.id===editId);
+      students[idx] = data;
+      toast('✅ Student updated successfully!');
+    } else {
+      students.push(data);
+      toast('✅ Student added successfully!');
+    }
+    save(); closeModal(); renderTable();
+  }
+
+  /* ── DELETE ── */
+  function deleteStudent(id) {
+    if(!confirm('Delete this student record?')) return;
+    students = students.filter(s=>s.id!==id);
+    save(); renderTable();
+    toast('🗑 Student deleted.','#7f1d1d');
+  }
+
+  /* ── EXPORT CSV ── */
+  function exportCSV() {
+    if(!students.length){ toast('No data to export','#b45309'); return; }
+    const headers = ['Name','Phone','Email','Address','Father','Mother','Blood Group','Department','Year','Session'];
+    const rows = students.map(s=>[s.name,s.phone,s.email,s.address,s.father,s.mother,s.blood,s.dept,s.year,s.session]
+      .map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'jessore_association_students.csv';
+    a.click();
+    toast('📥 CSV exported!');
+  }
+
+  /* ── INIT ── */
+  renderTable();
+</script>
+</body>
+</html>
